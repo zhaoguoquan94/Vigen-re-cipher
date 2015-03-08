@@ -3,17 +3,16 @@ from string import *
 import unittest,logging
 from multiprocessing.dummy import Pool as ThreadPool
 import ConfigParser
-logging.basicConfig(level=logging.INFO,format="in function %(funcName)s: %(message)s")
-e=0.003
+logging.basicConfig(level=logging.DEBUG,format="in function %(funcName)s: %(message)s")
 test_list=[1,2,4,8,16,32,64,128,256]
-def quick_ic((key_length,encoded)):
-    return get_ic(key_length,encoded)
+
 class Test(unittest.TestCase):
     def setUp(self):
         cf = ConfigParser.ConfigParser()
         cf.read("config.ini")
         self.key_length=cf.getint("vigenere","key_length")
         text_file_path=cf.get("vigenere","plain_text_path")
+        self.e=float(cf.get("vigenere","e"))
         self.plain_text=open(text_file_path).read()
         ans=[]
         for i in self.plain_text:
@@ -48,25 +47,29 @@ class Test(unittest.TestCase):
         logging.info("plain text frequency:"+str(freq_dict))
 
     def test_ics(self):
-        for i in [4,16]:
+        for i in [4,16,32]:
             key_gen=key_generator(i)
             logging.info("using key:"+str(key_gen))
             encoded=vigenere_encode(key_gen,self.plain_text)
             logging.info("encoded string frequency:"+str(get_frequency(encoded)))
             self.encoded=encoded
             # get_ic(i,encoded)
-            pools=ThreadPool(16)
+            pools=ThreadPool()
             args=[]
             for j in test_list:
                 args.append((j,encoded))
             results=pools.map(quick_ic,args)
 
 
+            for l in range(len(results)):
+                print("assuming key length="+str(test_list[l])+" IC:"+str(results[l]))
+
             #guess number section
             bei_shu=[]
             for k in range(len(results)):
-                if results[k]<0.066+e and results[k]>0.066-e:
+                if results[k]<0.066+self.e and results[k]>0.066-self.e:
                     bei_shu.append(test_list[k])
+
             self.assertEqual(i,bei_shu[0])
 if __name__ == "__main__":
     logging.info("Testing Vigenere Algorithm...")

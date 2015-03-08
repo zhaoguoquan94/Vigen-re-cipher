@@ -1,5 +1,9 @@
 # coding=utf-8
-import random,string
+import random,string,ConfigParser
+from multiprocessing.dummy import Pool as ThreadPool
+from string  import ascii_letters,ascii_uppercase
+def quick_ic((key_length,encoded)):
+    return get_ic(key_length,encoded)
 def shift_by_letter(origin_text,key,method):
     assert len(origin_text)==len(key)
     origin_text=origin_text.upper()
@@ -50,3 +54,39 @@ def get_ic(key_length,text):
     return float(sum(ics))/len(ics)
 
 
+def vigenere_attack_brute(cipher,top_key_length):
+    cf = ConfigParser.ConfigParser()
+    cf.read("config.ini")
+    e=float(cf.get("vigenere","e"))
+    test_list=[i for i in range(2,200)]
+    pools=ThreadPool()
+    args=[]
+    for j in test_list:
+        args.append((j,cipher))
+    results=pools.map(quick_ic,args)
+
+
+    for l in range(len(results)):
+        print("assuming key length="+str(test_list[l])+" IC:"+str(results[l]))
+
+    #guess number section
+    bei_shu=[]
+    for k in range(len(results)):
+        if results[k]<0.066+e and results[k]>0.066-e:
+            bei_shu.append(test_list[k])
+    print(bei_shu)
+
+if __name__=="__main__":
+    cf = ConfigParser.ConfigParser()
+    cf.read("config.ini")
+    text_file_path=cf.get("vigenere","plain_text_path")
+    e=float(cf.get("vigenere","e"))
+    plain_text=open(text_file_path).read()
+    ans=[]
+    for i in plain_text:
+        if i in ascii_letters:
+            ans.append(i)
+    plain_text=''.join(ans).upper()
+    key_length=26
+    encoded=vigenere_encode(key_generator(key_length),plain_text)
+    vigenere_attack_brute(encoded,len(plain_text))
