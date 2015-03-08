@@ -1,3 +1,5 @@
 *.pyc
+encoded_cipher.txt
+decoded_text.txt
 .idea/
 

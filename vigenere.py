@@ -30,6 +30,7 @@ def key_generator(key_length):
 
 def get_frequency(text):
     d={}
+    text=text.upper()
     for l in string.ascii_uppercase:
         d[l]=text.count(l)
     return d
@@ -47,6 +48,5 @@ def get_ic(key_length,text):
         ics.append(Ic_sum)
     # print("ic with key_length="+str(key_length)+"\t:"+str(float(sum(ics))/len(ics)))
     return float(sum(ics))/len(ics)
-
 
 
