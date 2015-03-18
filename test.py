@@ -45,7 +45,9 @@ class Test(unittest.TestCase):
         freq_dict=get_frequency(self.plain_text)
         self.assertEqual(self.plain_text.count("A"),freq_dict["A"])
         logging.info("plain text frequency:"+str(freq_dict))
-
+    def test_get_largest_freq_letter(self):
+        d={"A":10,"B":13,"R":11}
+        self.assertEqual(get_largest_freq_letter(d),"B")
     def test_ics(self):
         for i in [4,16,32]:
             key_gen=key_generator(i)
@@ -71,6 +73,12 @@ class Test(unittest.TestCase):
                     bei_shu.append(test_list[k])
 
             self.assertEqual(i,bei_shu[0])
+    def test_get_shifted_cipher_letter_by_E(self):
+        self.assertEqual(get_shifted_cipher_letter_by_E("E"),'A')
+        self.assertEqual(get_shifted_cipher_letter_by_E("D"),"Z")
+        self.assertEqual(get_shifted_cipher_letter_by_E("F"),"B")
+    def test_decode(self):
+        self.assertEqual(vigenere_decode("MHE","MIG"),"ABC")
 if __name__ == "__main__":
     logging.info("Testing Vigenere Algorithm...")
     unittest.main()

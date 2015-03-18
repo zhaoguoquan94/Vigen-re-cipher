@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body style="text-align: center">
+<h1>Vigenere Cipher</h1>
+
+<h2>Encrypt</h2>
+
+<p><strong>Input plain text below</strong></p>
+<form method="post" action="/encrypt" style="text-align: center">
+    <div class="form-group">
+        <div class="col-lg-6 col-lg-offset-3">
+            <textarea class="form-control" rows="10"cols="150" placeholder="明文" name="plain_text" id="plain_text"></textarea>
+        </div>
+    </div>
+    <div>
+        <input type="number" placeholder="随机密钥长度" name="key_length" id="key_length">
+    </div>
+
+    <div class="row">
+        <div  class="col-md-4 col-md-offset-4" style="margin-top: 20px">
+            <input type="submit" class="btn btn-info  btn-block" value="加密">
+        </div>
+    </div>
+
+</form>
+<h2>Decrypt</h2>
+
+<p><strong>Input cipher text below</strong></p>
+
+
+
+<form method="post" action="/decrypt" style="text-align: center">
+    <div class="form-group">
+        <div class="col-lg-6 col-lg-offset-3">
+            <textarea class="form-control" rows="10"cols="150" placeholder="密文" name="cipher_text" id="cipher_text"></textarea>
+        </div>
+    </div>
+    <div>
+        <input type="number" placeholder="随机密钥长度上限" name="max_key_length" id="max_key_length">
+    </div>
+
+    <div class="row">
+        <div  class="col-md-4 col-md-offset-4" style="margin-top: 20px">
+            <input type="submit" class="btn btn-info  btn-block" value="解密">
+        </div>
+    </div>
+
+</form>
+</body>
+</html>
