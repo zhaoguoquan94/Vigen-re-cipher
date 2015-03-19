@@ -1,3 +1,4 @@
+# encoding = utf8
 from vigenere import *
 from string import *
 import unittest,logging
@@ -79,6 +80,22 @@ class Test(unittest.TestCase):
         self.assertEqual(get_shifted_cipher_letter_by_E("F"),"B")
     def test_decode(self):
         self.assertEqual(vigenere_decode("MHE","MIG"),"ABC")
+    def test_brute_kakisis(self):
+        d=vigenere_attack_kasiski_key_length(vigenere_encode(key_generator(4),self.plain_text),5)
+        for k,v in d.items():
+            print(k,v)
+        d4=d['4']
+        count=0
+        sum=0
+        for k,v in d4.items():
+            for i in v:
+                sum+=1
+                if i%4==0:
+                    count+=1
+        print("sum="+str(sum)+"\ncount="+str(count))
+
+
+
 if __name__ == "__main__":
     logging.info("Testing Vigenere Algorithm...")
     unittest.main()

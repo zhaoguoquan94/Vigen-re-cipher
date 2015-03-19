@@ -1,5 +1,5 @@
 # coding=utf-8
-import random, string, ConfigParser
+import random, string, ConfigParser,re
 from multiprocessing import Pool as ThreadPool
 from string import ascii_letters, ascii_uppercase
 
@@ -78,7 +78,7 @@ def get_ic(key_length, text):
         for k, v in freq.items():
             Ic_sum += float(v) * v / len(str_group) / len(str_group)
         ics.append(Ic_sum)
-    # print("ic with key_length="+str(key_length)+"\t:"+str(float(sum(ics))/len(ics)))
+    print("ic with key_length="+str(key_length)+"\t:"+str(float(sum(ics))/len(ics)))
     return float(sum(ics)) / len(ics)
 
 
@@ -107,6 +107,28 @@ def vigenere_attack_brute_key_length(cipher, top_key_length):
             raise
     return bei_shu[0]
 
+def vigenere_attack_kasiski_key_length(cipher,top_key_length):
+    if top_key_length<=2:
+        return [i for i in range(1,top_key_length)]
+    ans={}
+    for guess_length in range(3,top_key_length+1):
+        str_filter=set()
+        str_dict={}
+        for start in range(0,100):
+            part=cipher[start:start+guess_length]
+            if part in str_filter:
+                continue
+            str_filter.add(part)
+
+            count=0
+            position=[]
+            for m in re.finditer(part, cipher):
+                position.append(m.start())
+            delta_list=[position[i+1]-position[i] for i in range(0,len(position)-1)]
+            str_dict.setdefault(part,delta_list)
+        ans.setdefault(str(guess_length),str_dict)
+
+    return ans
 
 def clean_passage(text):
     ans = []
@@ -128,14 +150,14 @@ if __name__ == "__main__":
         if i in ascii_letters:
             ans.append(i)
     plain_text_unencryped = ''.join(ans).upper()
-    f = open(encoded_cipher_text_path)
+    # f = open(encoded_cipher_text_path)
     # f.write
     key_length = 4
     key = key_generator(key_length)
     key = 'ZVVGPAOYDT'
     print "generated key:" + key
     encoded = vigenere_encode(key, plain_text_unencryped)
-    key_length = vigenere_attack_brute_key_length(encoded, 30)
+    key_length = vigenere_attack_brute_key_length(encoded, 41)
     ans = []
     for i in range(0, key_length):
         cipher = encoded[i::key_length]

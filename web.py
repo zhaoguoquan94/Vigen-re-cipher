@@ -17,7 +17,7 @@ def encrypt():
     key_length=request.form["key_length"]
     key=key_generator(int(key_length))
     cipher=vigenere_encode(key,plain_text)
-    ans=u"<p>生成密钥:{0}</p><p>密文:</p><div>{1}</div>".format(key,cipher)
+    ans=u'<p>生成密钥:{0}</p><p>密文:</p><div style="word-break:break-all">{1}</div>'.format(key,cipher)
     return ans
 @app.route("/decrypt",methods=["GET",'POST'])
 def decrype():
@@ -36,7 +36,7 @@ def decrype():
         print(cipher_letter)
     key= "key:\t"+''.join(ans)
     plain_text=vigenere_decode(''.join(ans),cipher_text)
-    return unicode(key)+u"<br>原文:<div>{0}</div>".format(plain_text)
+    return unicode(key)+u'<br>原文:<div style="word-break:break-all">{0}</div>'.format(plain_text)
 
 if __name__ == '__main__':
     app.run(debug=True)
